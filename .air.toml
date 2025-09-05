@@ -1,0 +1,5 @@
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o ./tmp/main.exe ./cmd/web/main.go"
+  bin = "tmp/main.exe"

@@ -1,0 +1,26 @@
+#how to run? just "task run/watch/..." in your terminal
+#run with argument "task migrate -- version/up/down/..."
+
+version: 3
+
+dotenv: [".env", "{{.HOME}}/.env"]
+
+tasks:
+  run:
+    cmds:
+      - go run cmd/web/main.go
+  build:
+    cmds:
+      - go build cmd/web/main.go
+  watch:
+    cmds:
+      - air # run with watch file, live reloading
+  migrate:
+    cmds:
+      - migrate -database postgres://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME?sslmode=disable -path db/migrations {{.CLI_ARGS}}
+  migrate-create:
+    cmds:
+      - migrate create -ext sql -dir db/migrations {{.CLI_ARGS}}
+  seeds:
+    cmds:
+      - go run cmd/seeds/main.go
