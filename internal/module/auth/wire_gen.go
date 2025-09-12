@@ -7,6 +7,7 @@
 package auth
 
 import (
+	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/helper"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/module/auth/repository"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/module/auth/usecase"
 	"github.com/go-playground/validator/v10"
@@ -15,9 +16,9 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeAuthHandler(db *gorm.DB, validator2 *validator.Validate) *AuthController {
+func InitializeAuthHandler(db *gorm.DB, validator2 *validator.Validate, config *helper.Config) *AuthController {
 	authRepository := repository.NewAuthRepository()
-	authUseCase := usecase.NewAuthUseCase(authRepository, db)
-	authController := NewAuthController(authUseCase, validator2)
+	authUseCase := usecase.NewAuthUseCase(authRepository, db, config)
+	authController := NewAuthController(authUseCase, validator2, config)
 	return authController
 }

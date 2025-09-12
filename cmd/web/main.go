@@ -27,6 +27,7 @@ func main() {
 	db := config.NewDB()
 	validate := config.NewValidator()
 	fiber, err := config.NewFiber()
+	cfg := config.NewConfig()
 	if err != nil {
 		panic(err)
 	}
@@ -35,6 +36,7 @@ func main() {
 		App:      fiber,
 		Db:       db,
 		Validate: validate,
+		Config:   cfg,
 	})
 
 	webport := os.Getenv("PORT")

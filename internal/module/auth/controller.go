@@ -3,6 +3,7 @@ package auth
 import (
 	"strings"
 
+	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/delivery/http/middleware"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/helper"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/model"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/module/auth/usecase"
@@ -13,13 +14,22 @@ import (
 type AuthController struct {
 	*usecase.AuthUseCase
 	*validator.Validate
+	*helper.Config
 }
 
-func NewAuthController(authUseCase *usecase.AuthUseCase, validator *validator.Validate) *AuthController {
+func NewAuthController(authUseCase *usecase.AuthUseCase, validator *validator.Validate, config *helper.Config) *AuthController {
 	return &AuthController{
 		AuthUseCase: authUseCase,
 		Validate:    validator,
+		Config:      config,
 	}
+}
+
+func (c *AuthController) RegisterRoutes(router fiber.Router, mw *middleware.Middleware) {
+	r := router.Group("/auth")
+	r.Post("/login", c.Login)
+	r.Post("/register", c.Register)
+	r.Post("/refresh", c.Refresh)
 }
 
 func (c *AuthController) Register(ctx *fiber.Ctx) error {
@@ -38,7 +48,7 @@ func (c *AuthController) Register(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return helper.Success(ctx, response, 200)
+	return helper.Success(ctx, response, 201)
 }
 
 func (c *AuthController) Login(ctx *fiber.Ctx) error {

@@ -1,6 +1,8 @@
 package helper
 
 import (
+	"os"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -49,4 +51,19 @@ func ValidateToken(tokenStr string, secret string) (*JWTClaims, error) {
 	}
 
 	return claims, nil
+}
+
+func ValidRedirectUrl(redirectUri string) bool {
+	orderService := os.Getenv("ORDER_SERVICE_URL")
+	services := []string{
+		orderService,
+	}
+
+	for _, s := range services {
+		if strings.Contains(redirectUri, s) {
+			return true
+		}
+	}
+
+	return false
 }

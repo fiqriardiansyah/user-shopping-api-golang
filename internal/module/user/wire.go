@@ -4,6 +4,7 @@
 package user
 
 import (
+	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/helper"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/module/user/repository"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/module/user/usecase"
 	"github.com/go-playground/validator/v10"
@@ -11,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitializeUserHandler(db *gorm.DB, validate *validator.Validate) *UserController {
+func InitializeUserHandler(db *gorm.DB, validate *validator.Validate, config *helper.Config) *UserController {
 	wire.Build(repository.NewUserRepository, usecase.NewUserUseCase, NewUserController)
 	return nil
 }

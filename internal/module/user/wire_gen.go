@@ -7,6 +7,7 @@
 package user
 
 import (
+	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/helper"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/module/user/repository"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/module/user/usecase"
 	"github.com/go-playground/validator/v10"
@@ -15,9 +16,9 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeUserHandler(db *gorm.DB, validate *validator.Validate) *UserController {
+func InitializeUserHandler(db *gorm.DB, validate *validator.Validate, config *helper.Config) *UserController {
 	userRepository := repository.NewUserRepository()
 	userUseCase := usecase.NewUserUseCase(userRepository, db)
-	userController := NewUserController(userUseCase, validate)
+	userController := NewUserController(userUseCase, validate, config)
 	return userController
 }

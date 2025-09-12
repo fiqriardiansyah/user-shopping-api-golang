@@ -3,6 +3,7 @@ package user
 import (
 	"strings"
 
+	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/delivery/http/middleware"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/entity"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/helper"
 	"github.com/fiqriardiansyah/user-shopping-api-golang/internal/module/user/usecase"
@@ -14,13 +15,21 @@ import (
 type UserController struct {
 	*usecase.UserUseCase
 	*validator.Validate
+	*helper.Config
 }
 
-func NewUserController(useCase *usecase.UserUseCase, validator *validator.Validate) *UserController {
+func NewUserController(useCase *usecase.UserUseCase, validator *validator.Validate, config *helper.Config) *UserController {
 	return &UserController{
 		UserUseCase: useCase,
 		Validate:    validator,
+		Config:      config,
 	}
+}
+
+func (c *UserController) RegisterRoutes(router fiber.Router, mw *middleware.Middleware) {
+	users := router.Group("/users", mw.AuthMiddleware)
+	users.Get("/me", c.Me)
+	users.Get("/:id", mw.RoleMiddleware("admin"), c.User)
 }
 
 func (c *UserController) Me(ctx *fiber.Ctx) error {
