@@ -60,7 +60,7 @@ func ValidRedirectUrl(redirectUri string) bool {
 	}
 
 	for _, s := range services {
-		if strings.Contains(redirectUri, s) {
+		if strings.HasPrefix(redirectUri, s) {
 			return true
 		}
 	}

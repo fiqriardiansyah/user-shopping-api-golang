@@ -16,9 +16,20 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeAuthHandler(db *gorm.DB, validator2 *validator.Validate, config *helper.Config) *AuthController {
+func InitializeAuthHandler(db *gorm.DB, validator2 *validator.Validate, config *helper.Config) *AuthHandlerSet {
 	authRepository := repository.NewAuthRepository()
 	authUseCase := usecase.NewAuthUseCase(authRepository, db, config)
 	authController := NewAuthController(authUseCase, validator2, config)
-	return authController
+	authHandlerSet := &AuthHandlerSet{
+		Controller: authController,
+		UseCase:    authUseCase,
+	}
+	return authHandlerSet
+}
+
+// wire.go:
+
+type AuthHandlerSet struct {
+	Controller *AuthController
+	UseCase    *usecase.AuthUseCase
 }

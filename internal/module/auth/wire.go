@@ -12,7 +12,16 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitializeAuthHandler(db *gorm.DB, validator *validator.Validate, config *helper.Config) *AuthController {
-	wire.Build(usecase.NewAuthUseCase, repository.NewAuthRepository, NewAuthController)
+type AuthHandlerSet struct {
+	Controller *AuthController
+	UseCase    *usecase.AuthUseCase
+}
+
+func InitializeAuthHandler(db *gorm.DB, validator *validator.Validate, config *helper.Config) *AuthHandlerSet {
+	wire.Build(
+		usecase.NewAuthUseCase,
+		repository.NewAuthRepository,
+		NewAuthController,
+		wire.Struct(new(AuthHandlerSet), "*"))
 	return nil
 }

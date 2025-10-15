@@ -16,9 +16,20 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeUserHandler(db *gorm.DB, validate *validator.Validate, config *helper.Config) *UserController {
+func InitializeUserHandler(db *gorm.DB, validate *validator.Validate, config *helper.Config) *UserHandlerSet {
 	userRepository := repository.NewUserRepository()
 	userUseCase := usecase.NewUserUseCase(userRepository, db)
 	userController := NewUserController(userUseCase, validate, config)
-	return userController
+	userHandlerSet := &UserHandlerSet{
+		Controller: userController,
+		UseCase:    userUseCase,
+	}
+	return userHandlerSet
+}
+
+// wire.go:
+
+type UserHandlerSet struct {
+	Controller *UserController
+	UseCase    *usecase.UserUseCase
 }

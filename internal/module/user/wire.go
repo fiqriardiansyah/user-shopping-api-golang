@@ -12,7 +12,16 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitializeUserHandler(db *gorm.DB, validate *validator.Validate, config *helper.Config) *UserController {
-	wire.Build(repository.NewUserRepository, usecase.NewUserUseCase, NewUserController)
+type UserHandlerSet struct {
+	Controller *UserController
+	UseCase    *usecase.UserUseCase
+}
+
+func InitializeUserHandler(db *gorm.DB, validate *validator.Validate, config *helper.Config) *UserHandlerSet {
+	wire.Build(
+		repository.NewUserRepository,
+		usecase.NewUserUseCase,
+		NewUserController,
+		wire.Struct(new(UserHandlerSet), "*"))
 	return nil
 }

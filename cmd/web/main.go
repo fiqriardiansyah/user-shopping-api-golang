@@ -24,20 +24,24 @@ func init() {
 }
 
 func main() {
-	db := config.NewDB()
-	validate := config.NewValidator()
 	fiber, err := config.NewFiber()
-	cfg := config.NewConfig()
 	if err != nil {
 		panic(err)
 	}
+	db := config.NewDB()
+	validate := config.NewValidator()
+	cfg := config.NewConfig()
+	grpcServer := config.NewGrpcServer()
 
 	config.NewApp(&config.AppConfig{
-		App:      fiber,
-		Db:       db,
-		Validate: validate,
-		Config:   cfg,
+		App:        fiber,
+		Db:         db,
+		Validate:   validate,
+		Config:     cfg,
+		GrpcServer: grpcServer,
 	})
+
+	go config.StartGrpcServer(grpcServer)
 
 	webport := os.Getenv("PORT")
 	if err := fiber.Listen(fmt.Sprintf(":%s", webport)); err != nil {
